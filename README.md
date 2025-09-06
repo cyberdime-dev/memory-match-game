@@ -2,7 +2,7 @@
 
 A modern, feature-rich memory matching game built with vanilla JavaScript, HTML5, and CSS3. Test your memory skills with three difficulty levels and track your progress on the leaderboard!
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-Play%20Now-brightgreen?style=for-the-badge)](https://your-username.github.io/memory-match-game)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Play%20Now-brightgreen?style=for-the-badge)](https://cyberdime-dev.github.io/memory-match-game)
 [![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](LICENSE)
 [![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-yellow?style=for-the-badge&logo=javascript)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 [![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/HTML)
@@ -41,7 +41,7 @@ A modern, feature-rich memory matching game built with vanilla JavaScript, HTML5
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/your-username/memory-match-game.git
+   git clone https://github.com/cyberdime-dev/memory-match-game.git
    cd memory-match-game
    ```
 
