@@ -1,5 +1,22 @@
 // Game configuration
-const emojis = ["🍎", "🍌", "🍇", "🍒", "🍉", "🍍", "🥝", "🍑"];
+const DIFFICULTY_CONFIGS = {
+    easy: {
+        name: "Easy",
+        gridSize: 4,
+        emojis: ["🍎", "🍌", "🍇", "🍒", "🍉", "🍍", "🥝", "🍑"]
+    },
+    medium: {
+        name: "Medium", 
+        gridSize: 6,
+        emojis: ["🍎", "🍌", "🍇", "🍒", "🍉", "🍍", "🥝", "🍑", "🍊", "🍋", "🍐", "🥭", "🍓", "🫐", "🥥", "🍈", "🍏", "🍅"]
+    },
+    hard: {
+        name: "Hard",
+        gridSize: 8,
+        emojis: ["🍎", "🍌", "🍇", "🍒", "🍉", "🍍", "🥝", "🍑", "🍊", "🍋", "🍐", "🥭", "🍓", "🫐", "🥥", "🍈", "🍏", "🍅", "🥕", "🌽", "🥔", "🍠", "🥜", "🌰", "🥜", "🍯", "🥛", "🍼", "🧀", "🥚", "🍳", "🥞"]
+    }
+};
+
 const LEADERBOARD_KEY = "memoryMatchLeaderboard";
 const MAX_ENTRIES = 10;
 
@@ -25,7 +42,7 @@ function validateDOMElement(element, elementName) {
 }
 
 // Initialize DOM elements with validation
-let gameBoard, statusText, timerEl, movesEl, leaderboardEl, newGameBtn;
+let gameBoard, statusText, timerEl, movesEl, leaderboardEl, newGameBtn, difficultySelect;
 
 try {
     gameBoard = validateDOMElement(document.getElementById("game-board"), "game-board");
@@ -34,16 +51,15 @@ try {
     movesEl = validateDOMElement(document.getElementById("moves"), "moves");
     leaderboardEl = validateDOMElement(document.getElementById("leaderboard"), "leaderboard");
     newGameBtn = validateDOMElement(document.getElementById("new-game-btn"), "new-game-btn");
+    difficultySelect = validateDOMElement(document.getElementById("difficulty"), "difficulty");
 } catch (error) {
     logError("Failed to initialize game elements", error);
     throw error;
 }
 
 // Initialize game state
-let cards = [...emojis, ...emojis]; // Duplicate for matching pairs
-cards = shuffle(cards);
-
-// Initialize game state variables
+let currentDifficulty = 'medium';
+let cards = [];
 let firstCard = null;
 let secondCard = null;
 let lockBoard = false;
@@ -54,6 +70,18 @@ let moves = 0;
 let time = 0;
 let timerInterval = null;
 let gameStarted = false;
+
+// Initialize cards based on current difficulty
+function initializeCards() {
+    const config = DIFFICULTY_CONFIGS[currentDifficulty];
+    const totalPairs = (config.gridSize * config.gridSize) / 2;
+    const selectedEmojis = config.emojis.slice(0, totalPairs);
+    cards = [...selectedEmojis, ...selectedEmojis]; // Duplicate for matching pairs
+    cards = shuffle(cards);
+}
+
+// Initialize cards on startup
+initializeCards();
 
 // Create a card element with click handler
 function createCard(emoji) {
@@ -121,10 +149,13 @@ function handleCardClick(card) {
             resetTurn();
             matches++;
 
-            if (matches === emojis.length) {
+            const config = DIFFICULTY_CONFIGS[currentDifficulty];
+            const totalPairs = (config.gridSize * config.gridSize) / 2;
+            
+            if (matches === totalPairs) {
                 stopTimer();
                 showStatusMessage(`🎉 You won in ${moves} moves and ${time} seconds!`, 'success');
-                saveToLeaderboard(moves, time);
+                saveToLeaderboard(moves, time, currentDifficulty);
             }
         } else {
             setTimeout(() => {
@@ -147,6 +178,8 @@ function createGameBoard() {
             throw new Error('Game board element not available');
         }
 
+        // Update game board class for current difficulty
+        gameBoard.className = `game-board ${currentDifficulty}`;
         gameBoard.innerHTML = "";
         
         if (!cards || cards.length === 0) {
@@ -294,7 +327,7 @@ function loadLeaderboard() {
 }
 
 // Save a new score to the leaderboard
-function saveToLeaderboard(moves, time) {
+function saveToLeaderboard(moves, time, difficulty = currentDifficulty) {
     try {
         // Validate input parameters
         if (typeof moves !== 'number' || moves < 0 || !Number.isInteger(moves)) {
@@ -303,9 +336,13 @@ function saveToLeaderboard(moves, time) {
         if (typeof time !== 'number' || time < 0) {
             throw new Error('Invalid time value');
         }
+        if (!DIFFICULTY_CONFIGS[difficulty]) {
+            throw new Error('Invalid difficulty value');
+        }
 
         const timestamp = new Date().toLocaleString();
-        const newEntry = { moves, time, timestamp };
+        const config = DIFFICULTY_CONFIGS[difficulty];
+        const newEntry = { moves, time, timestamp, difficulty, gridSize: config.gridSize };
 
         let leaderboard = [];
         try {
@@ -365,7 +402,8 @@ function renderLeaderboard(entries) {
                 }
 
                 const li = document.createElement("li");
-                li.textContent = `#${index + 1}: ${entry.moves} moves in ${entry.time}s (${entry.timestamp || 'Unknown'})`;
+                const difficultyText = entry.difficulty ? ` (${DIFFICULTY_CONFIGS[entry.difficulty]?.name || entry.difficulty})` : '';
+                li.textContent = `#${index + 1}: ${entry.moves} moves in ${entry.time}s${difficultyText} (${entry.timestamp || 'Unknown'})`;
                 leaderboardEl.appendChild(li);
             } catch (error) {
                 logError(`Failed to render leaderboard entry at index ${index}`, error);
@@ -402,8 +440,7 @@ function resetGame() {
         
         // Reshuffle cards
         try {
-            cards = [...emojis, ...emojis];
-            cards = shuffle(cards);
+            initializeCards();
         } catch (error) {
             logError("Failed to reshuffle cards", error);
             return;
@@ -416,7 +453,33 @@ function resetGame() {
     }
 }
 
-// Add event listener to new game button with error handling
+// Handle difficulty change
+function handleDifficultyChange() {
+    try {
+        if (!difficultySelect) {
+            throw new Error('Difficulty select element not available');
+        }
+        
+        const newDifficulty = difficultySelect.value;
+        if (!DIFFICULTY_CONFIGS[newDifficulty]) {
+            throw new Error(`Invalid difficulty: ${newDifficulty}`);
+        }
+        
+        // Only change difficulty if it's different from current
+        if (newDifficulty !== currentDifficulty) {
+            currentDifficulty = newDifficulty;
+            
+            // Reset the game with new difficulty
+            resetGame();
+            
+            showStatusMessage(`Switched to ${DIFFICULTY_CONFIGS[currentDifficulty].name} difficulty`, 'info');
+        }
+    } catch (error) {
+        logError("Failed to change difficulty", error);
+    }
+}
+
+// Add event listeners with error handling
 try {
     if (newGameBtn) {
         newGameBtn.addEventListener("click", () => {
@@ -429,8 +492,14 @@ try {
     } else {
         logError("New game button not found");
     }
+    
+    if (difficultySelect) {
+        difficultySelect.addEventListener("change", handleDifficultyChange);
+    } else {
+        logError("Difficulty select not found");
+    }
 } catch (error) {
-    logError("Failed to add event listener to new game button", error);
+    logError("Failed to add event listeners", error);
 }
 
 // Initialize the game with error handling

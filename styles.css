@@ -12,18 +12,27 @@ h1 {
 
 .game-board {
   display: grid;
-  grid-template-columns: repeat(4, 100px);
   gap: 15px;
   justify-content: center;
   margin: 0 auto;
+  transition: all 0.3s ease;
+}
+
+.game-board.easy {
+  grid-template-columns: repeat(4, 100px);
+}
+
+.game-board.medium {
+  grid-template-columns: repeat(6, 80px);
+}
+
+.game-board.hard {
+  grid-template-columns: repeat(8, 60px);
 }
 
 .card {
-  width: 100px;
-  height: 100px;
   background-color: #2196f3;
   color: white;
-  font-size: 2rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -31,6 +40,25 @@ h1 {
   user-select: none;
   border-radius: 10px;
   transition: transform 0.3s;
+  aspect-ratio: 1;
+}
+
+.game-board.easy .card {
+  width: 100px;
+  height: 100px;
+  font-size: 2rem;
+}
+
+.game-board.medium .card {
+  width: 80px;
+  height: 80px;
+  font-size: 1.5rem;
+}
+
+.game-board.hard .card {
+  width: 60px;
+  height: 60px;
+  font-size: 1.2rem;
 }
 
 .card.flipped {
@@ -51,6 +79,35 @@ h1 {
   margin-bottom: 1rem;
   font-size: 1.2rem;
   flex-wrap: wrap;
+}
+
+.difficulty-selector {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+.difficulty-select {
+  padding: 8px 12px;
+  border: 2px solid #2196f3;
+  border-radius: 6px;
+  background-color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.difficulty-select:focus {
+  outline: none;
+  border-color: #1976d2;
+  box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+}
+
+.difficulty-select:hover {
+  border-color: #1976d2;
 }
 
 .new-game-btn {
