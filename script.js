@@ -1,15 +1,47 @@
+// Game configuration
 const emojis = ["🍎", "🍌", "🍇", "🍒", "🍉", "🍍", "🥝", "🍑"];
-let cards = [...emojis, ...emojis]; // Duplicate for matching pairs
-cards = shuffle(cards);
-
-const gameBoard = document.getElementById("game-board"); // The game board element
-const statusText = document.getElementById("status-text"); // Status text element
-const timerEl = document.getElementById("timer"); // Timer element
-const movesEl = document.getElementById("moves"); // Moves element
-const leaderboardEl = document.getElementById("leaderboard");
-const newGameBtn = document.getElementById("new-game-btn"); // New game button
 const LEADERBOARD_KEY = "memoryMatchLeaderboard";
 const MAX_ENTRIES = 10;
+
+// Error handling utility functions
+function logError(message, error = null) {
+    console.error(`Memory Match Game Error: ${message}`, error);
+    showStatusMessage(`⚠️ ${message}`, 'error');
+}
+
+function showStatusMessage(message, type = 'info') {
+    const statusText = document.getElementById("status-text");
+    if (statusText) {
+        statusText.textContent = message;
+        statusText.className = type;
+    }
+}
+
+function validateDOMElement(element, elementName) {
+    if (!element) {
+        throw new Error(`Required DOM element '${elementName}' not found`);
+    }
+    return element;
+}
+
+// Initialize DOM elements with validation
+let gameBoard, statusText, timerEl, movesEl, leaderboardEl, newGameBtn;
+
+try {
+    gameBoard = validateDOMElement(document.getElementById("game-board"), "game-board");
+    statusText = validateDOMElement(document.getElementById("status-text"), "status-text");
+    timerEl = validateDOMElement(document.getElementById("timer"), "timer");
+    movesEl = validateDOMElement(document.getElementById("moves"), "moves");
+    leaderboardEl = validateDOMElement(document.getElementById("leaderboard"), "leaderboard");
+    newGameBtn = validateDOMElement(document.getElementById("new-game-btn"), "new-game-btn");
+} catch (error) {
+    logError("Failed to initialize game elements", error);
+    throw error;
+}
+
+// Initialize game state
+let cards = [...emojis, ...emojis]; // Duplicate for matching pairs
+cards = shuffle(cards);
 
 // Initialize game state variables
 let firstCard = null;
@@ -25,60 +57,113 @@ let gameStarted = false;
 
 // Create a card element with click handler
 function createCard(emoji) {
-    const card = document.createElement("div");
-    card.classList.add("card");
-    card.dataset.emoji = emoji;
-    card.textContent = "❓";
-
-    card.addEventListener("click", () => {
-        if (lockBoard || card.classList.contains("flipped")) return;
-
-        if (!gameStarted) {
-            gameStarted = true;
-            startTimer();
+    try {
+        // Validate input
+        if (!emoji || typeof emoji !== 'string') {
+            throw new Error('Invalid emoji provided to createCard');
         }
 
-        flipCard(card);
+        const card = document.createElement("div");
+        if (!card) {
+            throw new Error('Failed to create card element');
+        }
 
-        if (!firstCard) {
-            firstCard = card;
-        } else {
-            secondCard = card;
-            lockBoard = true;
-            moves++;
+        card.classList.add("card");
+        card.dataset.emoji = emoji;
+        card.textContent = "❓";
+
+        card.addEventListener("click", () => {
+            try {
+                handleCardClick(card);
+            } catch (error) {
+                logError("Error handling card click", error);
+            }
+        });
+
+        return card;
+    } catch (error) {
+        logError("Failed to create card", error);
+        return null;
+    }
+}
+
+// Handle card click with error handling
+function handleCardClick(card) {
+    if (!card) {
+        throw new Error('Invalid card element');
+    }
+
+    if (lockBoard || card.classList.contains("flipped")) return;
+
+    if (!gameStarted) {
+        gameStarted = true;
+        startTimer();
+    }
+
+    flipCard(card);
+
+    if (!firstCard) {
+        firstCard = card;
+    } else {
+        secondCard = card;
+        lockBoard = true;
+        moves++;
+        
+        try {
             movesEl.textContent = moves;
+        } catch (error) {
+            logError("Failed to update moves display", error);
+        }
 
-            if (firstCard.dataset.emoji === secondCard.dataset.emoji) {
-                firstCard.classList.add("matched");
-                secondCard.classList.add("matched");
-                resetTurn();
-                matches++;
+        if (firstCard.dataset.emoji === secondCard.dataset.emoji) {
+            firstCard.classList.add("matched");
+            secondCard.classList.add("matched");
+            resetTurn();
+            matches++;
 
-                if (matches === emojis.length) {
-                    stopTimer();
-                    statusText.textContent = `🎉 You won in ${moves} moves and ${time} seconds!`;
-                    saveToLeaderboard(moves, time);
-                }
-            } else {
-                setTimeout(() => {
+            if (matches === emojis.length) {
+                stopTimer();
+                showStatusMessage(`🎉 You won in ${moves} moves and ${time} seconds!`, 'success');
+                saveToLeaderboard(moves, time);
+            }
+        } else {
+            setTimeout(() => {
+                try {
                     unflipCard(firstCard);
                     unflipCard(secondCard);
                     resetTurn();
-                }, 1000);
-            }
+                } catch (error) {
+                    logError("Error in card unflip timeout", error);
+                }
+            }, 1000);
         }
-    });
-
-    return card;
+    }
 }
 
 // Create initial game board
 function createGameBoard() {
-    gameBoard.innerHTML = "";
-    cards.forEach((emoji) => {
-        const card = createCard(emoji);
-        gameBoard.appendChild(card);
-    });
+    try {
+        if (!gameBoard) {
+            throw new Error('Game board element not available');
+        }
+
+        gameBoard.innerHTML = "";
+        
+        if (!cards || cards.length === 0) {
+            throw new Error('No cards available to create game board');
+        }
+
+        cards.forEach((emoji, index) => {
+            const card = createCard(emoji);
+            if (card) {
+                gameBoard.appendChild(card);
+            } else {
+                logError(`Failed to create card at index ${index}`);
+            }
+        });
+    } catch (error) {
+        logError("Failed to create game board", error);
+    }
 }
 
 // Initialize the game
@@ -86,111 +171,273 @@ createGameBoard();
 
 // Flip a card to reveal its emoji
 function flipCard(card) {
-    card.textContent = card.dataset.emoji;
-    card.classList.add("flipped");
+    try {
+        if (!card) {
+            throw new Error('Invalid card element provided to flipCard');
+        }
+        if (!card.dataset.emoji) {
+            throw new Error('Card missing emoji data');
+        }
+        
+        card.textContent = card.dataset.emoji;
+        card.classList.add("flipped");
+    } catch (error) {
+        logError("Failed to flip card", error);
+    }
 }
 
 // Unflip a card to hide its emoji
 function unflipCard(card) {
-    card.textContent = "❓";
-    card.classList.remove("flipped");
+    try {
+        if (!card) {
+            throw new Error('Invalid card element provided to unflipCard');
+        }
+        
+        card.textContent = "❓";
+        card.classList.remove("flipped");
+    } catch (error) {
+        logError("Failed to unflip card", error);
+    }
 }
 
 // Reset the turn state for the next pair of cards
 function resetTurn() {
-    [firstCard, secondCard] = [null, null];
-    lockBoard = false;
+    try {
+        [firstCard, secondCard] = [null, null];
+        lockBoard = false;
+    } catch (error) {
+        logError("Failed to reset turn", error);
+    }
 }
 
 // Shuffle an array using Fisher-Yates algorithm
 function shuffle(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
+    try {
+        if (!Array.isArray(array)) {
+            throw new Error('Invalid input: expected array');
+        }
+        if (array.length === 0) {
+            return array;
+        }
+
+        const shuffledArray = [...array]; // Create a copy to avoid mutating original
+        for (let i = shuffledArray.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+        }
+        return shuffledArray;
+    } catch (error) {
+        logError("Failed to shuffle array", error);
+        return array; // Return original array if shuffle fails
     }
-    return array;
 }
 
 // Start the game and timer
 function startTimer() {
-    timerInterval = setInterval(() => {
-        time++;
-        timerEl.textContent = time;
-    }, 1000);
+    try {
+        if (timerInterval) {
+            clearInterval(timerInterval); // Clear any existing timer
+        }
+        
+        timerInterval = setInterval(() => {
+            try {
+                time++;
+                if (timerEl) {
+                    timerEl.textContent = time;
+                }
+            } catch (error) {
+                logError("Error updating timer display", error);
+            }
+        }, 1000);
+    } catch (error) {
+        logError("Failed to start timer", error);
+    }
 }
 
 // Stop the game timer
 function stopTimer() {
-    clearInterval(timerInterval);
+    try {
+        if (timerInterval) {
+            clearInterval(timerInterval);
+            timerInterval = null;
+        }
+    } catch (error) {
+        logError("Failed to stop timer", error);
+    }
 }
 
 // Load leaderboard from local storage
 function loadLeaderboard() {
-    const stored = JSON.parse(localStorage.getItem(LEADERBOARD_KEY)) || [];
-    renderLeaderboard(stored);
+    try {
+        if (!leaderboardEl) {
+            throw new Error('Leaderboard element not available');
+        }
+
+        let stored = [];
+        try {
+            const storedData = localStorage.getItem(LEADERBOARD_KEY);
+            if (storedData) {
+                stored = JSON.parse(storedData);
+                if (!Array.isArray(stored)) {
+                    throw new Error('Invalid leaderboard data format');
+                }
+            }
+        } catch (storageError) {
+            logError("Failed to load leaderboard from storage", storageError);
+            stored = [];
+        }
+
+        renderLeaderboard(stored);
+    } catch (error) {
+        logError("Failed to load leaderboard", error);
+    }
 }
 
 // Save a new score to the leaderboard
 function saveToLeaderboard(moves, time) {
-    const timestamp = new Date().toLocaleString();
-    const newEntry = { moves, time, timestamp };
+    try {
+        // Validate input parameters
+        if (typeof moves !== 'number' || moves < 0 || !Number.isInteger(moves)) {
+            throw new Error('Invalid moves value');
+        }
+        if (typeof time !== 'number' || time < 0) {
+            throw new Error('Invalid time value');
+        }
 
-    let leaderboard = JSON.parse(localStorage.getItem(LEADERBOARD_KEY)) || [];
+        const timestamp = new Date().toLocaleString();
+        const newEntry = { moves, time, timestamp };
 
-    leaderboard.push(newEntry);
+        let leaderboard = [];
+        try {
+            const storedData = localStorage.getItem(LEADERBOARD_KEY);
+            if (storedData) {
+                leaderboard = JSON.parse(storedData);
+                if (!Array.isArray(leaderboard)) {
+                    throw new Error('Invalid leaderboard data format');
+                }
+            }
+        } catch (storageError) {
+            logError("Failed to load existing leaderboard", storageError);
+            leaderboard = [];
+        }
 
-    leaderboard.sort((a, b) => {
+        leaderboard.push(newEntry);
+
         // Sort by moves, then time
-        if (a.moves !== b.moves) return a.moves - b.moves;
-        return a.time - b.time;
-    });
+        leaderboard.sort((a, b) => {
+            if (a.moves !== b.moves) return a.moves - b.moves;
+            return a.time - b.time;
+        });
 
-    leaderboard = leaderboard.slice(0, MAX_ENTRIES);
-    localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(leaderboard));
-    renderLeaderboard(leaderboard);
+        leaderboard = leaderboard.slice(0, MAX_ENTRIES);
+        
+        try {
+            localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(leaderboard));
+        } catch (storageError) {
+            logError("Failed to save leaderboard to storage", storageError);
+            return;
+        }
+
+        renderLeaderboard(leaderboard);
+    } catch (error) {
+        logError("Failed to save to leaderboard", error);
+    }
 }
 
 // Render the leaderboard entries to the DOM
 function renderLeaderboard(entries) {
-    leaderboardEl.innerHTML = "";
+    try {
+        if (!leaderboardEl) {
+            throw new Error('Leaderboard element not available');
+        }
 
-    entries.forEach((entry, index) => {
-        const li = document.createElement("li");
-        li.textContent = `#${index + 1}: ${entry.moves} moves in ${entry.time}s (${entry.timestamp})`;
-        leaderboardEl.appendChild(li);
-    });
+        if (!Array.isArray(entries)) {
+            throw new Error('Invalid entries format');
+        }
+
+        leaderboardEl.innerHTML = "";
+
+        entries.forEach((entry, index) => {
+            try {
+                if (!entry || typeof entry.moves !== 'number' || typeof entry.time !== 'number') {
+                    logError(`Invalid entry at index ${index}`);
+                    return;
+                }
+
+                const li = document.createElement("li");
+                li.textContent = `#${index + 1}: ${entry.moves} moves in ${entry.time}s (${entry.timestamp || 'Unknown'})`;
+                leaderboardEl.appendChild(li);
+            } catch (error) {
+                logError(`Failed to render leaderboard entry at index ${index}`, error);
+            }
+        });
+    } catch (error) {
+        logError("Failed to render leaderboard", error);
+    }
 }
 
 // Reset the game to initial state
 function resetGame() {
-    // Stop timer if running
-    stopTimer();
-    
-    // Reset game state variables
-    firstCard = null;
-    secondCard = null;
-    lockBoard = false;
-    matches = 0;
-    moves = 0;
-    time = 0;
-    gameStarted = false;
-    
-    // Reset display
-    timerEl.textContent = time;
-    movesEl.textContent = moves;
-    statusText.textContent = "";
-    
-    // Reshuffle cards
-    cards = [...emojis, ...emojis];
-    cards = shuffle(cards);
-    
-    // Recreate the game board
-    createGameBoard();
+    try {
+        // Stop timer if running
+        stopTimer();
+        
+        // Reset game state variables
+        firstCard = null;
+        secondCard = null;
+        lockBoard = false;
+        matches = 0;
+        moves = 0;
+        time = 0;
+        gameStarted = false;
+        
+        // Reset display
+        try {
+            if (timerEl) timerEl.textContent = time;
+            if (movesEl) movesEl.textContent = moves;
+            if (statusText) statusText.textContent = "";
+        } catch (error) {
+            logError("Failed to reset display elements", error);
+        }
+        
+        // Reshuffle cards
+        try {
+            cards = [...emojis, ...emojis];
+            cards = shuffle(cards);
+        } catch (error) {
+            logError("Failed to reshuffle cards", error);
+            return;
+        }
+        
+        // Recreate the game board
+        createGameBoard();
+    } catch (error) {
+        logError("Failed to reset game", error);
+    }
 }
 
-// Add event listener to new game button
-newGameBtn.addEventListener("click", resetGame);
+// Add event listener to new game button with error handling
+try {
+    if (newGameBtn) {
+        newGameBtn.addEventListener("click", (event) => {
+            try {
+                resetGame();
+            } catch (error) {
+                logError("Error in new game button click", error);
+            }
+        });
+    } else {
+        logError("New game button not found");
+    }
+} catch (error) {
+    logError("Failed to add event listener to new game button", error);
+}
 
-// Load leaderboard when the page loads
-loadLeaderboard();
+// Initialize the game with error handling
+try {
+    // Load leaderboard when the page loads
+    loadLeaderboard();
+} catch (error) {
+    logError("Failed to initialize game", error);
+}
 

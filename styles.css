@@ -77,6 +77,33 @@ h1 {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
+/* Status message styles */
+#status-text {
+  margin: 1rem 0;
+  padding: 0.5rem;
+  border-radius: 6px;
+  font-weight: bold;
+  min-height: 1.5rem;
+}
+
+#status-text.info {
+  background-color: #e3f2fd;
+  color: #1976d2;
+  border: 1px solid #bbdefb;
+}
+
+#status-text.success {
+  background-color: #e8f5e8;
+  color: #2e7d32;
+  border: 1px solid #c8e6c9;
+}
+
+#status-text.error {
+  background-color: #ffebee;
+  color: #c62828;
+  border: 1px solid #ffcdd2;
+}
+
 .leaderboard {
   max-width: 300px;
   margin: 1rem auto;
