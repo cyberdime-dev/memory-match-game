@@ -419,7 +419,7 @@ function resetGame() {
 // Add event listener to new game button with error handling
 try {
     if (newGameBtn) {
-        newGameBtn.addEventListener("click", (event) => {
+        newGameBtn.addEventListener("click", () => {
             try {
                 resetGame();
             } catch (error) {
