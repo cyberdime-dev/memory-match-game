@@ -23,8 +23,10 @@ Thumbs.db
 .idea/
 *.sublime-workspace
 *.sublime-project
+*.code-workspace
 
 # Misc
 *.log
 coverage/
 .cache/
+todo.md

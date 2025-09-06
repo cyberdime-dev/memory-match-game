@@ -7,6 +7,7 @@ const statusText = document.getElementById("status-text"); // Status text elemen
 const timerEl = document.getElementById("timer"); // Timer element
 const movesEl = document.getElementById("moves"); // Moves element
 const leaderboardEl = document.getElementById("leaderboard");
+const newGameBtn = document.getElementById("new-game-btn"); // New game button
 const LEADERBOARD_KEY = "memoryMatchLeaderboard";
 const MAX_ENTRIES = 10;
 
@@ -22,8 +23,8 @@ let time = 0;
 let timerInterval = null;
 let gameStarted = false;
 
-// Start the timer when the game starts
-cards.forEach((emoji) => {
+// Create a card element with click handler
+function createCard(emoji) {
     const card = document.createElement("div");
     card.classList.add("card");
     card.dataset.emoji = emoji;
@@ -55,11 +56,8 @@ cards.forEach((emoji) => {
 
                 if (matches === emojis.length) {
                     stopTimer();
-                    statusText.textContent = `🎉 You won in ${moves} moves and ${time} seconds! Refresh to play again.`;
-                    stopTimer();
+                    statusText.textContent = `🎉 You won in ${moves} moves and ${time} seconds!`;
                     saveToLeaderboard(moves, time);
-                    statusText.textContent = `🎉 You won in ${moves} moves and ${time} seconds! Refresh to play again.`;
-
                 }
             } else {
                 setTimeout(() => {
@@ -71,29 +69,40 @@ cards.forEach((emoji) => {
         }
     });
 
+    return card;
+}
 
-    gameBoard.appendChild(card);
-});
+// Create initial game board
+function createGameBoard() {
+    gameBoard.innerHTML = "";
+    cards.forEach((emoji) => {
+        const card = createCard(emoji);
+        gameBoard.appendChild(card);
+    });
+}
 
-// Start the timer when the first card is flipped
+// Initialize the game
+createGameBoard();
+
+// Flip a card to reveal its emoji
 function flipCard(card) {
     card.textContent = card.dataset.emoji;
     card.classList.add("flipped");
 }
 
-// Start the timer when the first card is flipped
+// Unflip a card to hide its emoji
 function unflipCard(card) {
     card.textContent = "❓";
     card.classList.remove("flipped");
 }
 
-// Start the timer
+// Reset the turn state for the next pair of cards
 function resetTurn() {
     [firstCard, secondCard] = [null, null];
     lockBoard = false;
 }
 
-// Update moves and timer display
+// Shuffle an array using Fisher-Yates algorithm
 function shuffle(array) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -110,7 +119,7 @@ function startTimer() {
     }, 1000);
 }
 
-// Start the game and timer when the first card is flipped
+// Stop the game timer
 function stopTimer() {
     clearInterval(timerInterval);
 }
@@ -121,7 +130,7 @@ function loadLeaderboard() {
     renderLeaderboard(stored);
 }
 
-// Load leaderboard when the page loads
+// Save a new score to the leaderboard
 function saveToLeaderboard(moves, time) {
     const timestamp = new Date().toLocaleString();
     const newEntry = { moves, time, timestamp };
@@ -141,7 +150,7 @@ function saveToLeaderboard(moves, time) {
     renderLeaderboard(leaderboard);
 }
 
-//  Save high score and leaderboard when the game is won
+// Render the leaderboard entries to the DOM
 function renderLeaderboard(entries) {
     leaderboardEl.innerHTML = "";
 
@@ -152,7 +161,36 @@ function renderLeaderboard(entries) {
     });
 }
 
+// Reset the game to initial state
+function resetGame() {
+    // Stop timer if running
+    stopTimer();
+    
+    // Reset game state variables
+    firstCard = null;
+    secondCard = null;
+    lockBoard = false;
+    matches = 0;
+    moves = 0;
+    time = 0;
+    gameStarted = false;
+    
+    // Reset display
+    timerEl.textContent = time;
+    movesEl.textContent = moves;
+    statusText.textContent = "";
+    
+    // Reshuffle cards
+    cards = [...emojis, ...emojis];
+    cards = shuffle(cards);
+    
+    // Recreate the game board
+    createGameBoard();
+}
+
+// Add event listener to new game button
+newGameBtn.addEventListener("click", resetGame);
+
 // Load leaderboard when the page loads
-// loadHighScore(); // Load high score when the page loads
-loadLeaderboard(); // Load leaderboard when the page loads
+loadLeaderboard();
 

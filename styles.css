@@ -50,15 +50,31 @@ h1 {
   gap: 2rem;
   margin-bottom: 1rem;
   font-size: 1.2rem;
+  flex-wrap: wrap;
 }
 
-#game-info {
-  display: flex;
-  justify-content: center;
-  gap: 2rem;
+.new-game-btn {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  font-size: 1.1rem;
+  border-radius: 8px;
+  cursor: pointer;
   margin-bottom: 1rem;
-  font-size: 1.2rem;
-  flex-wrap: wrap;
+  transition: background-color 0.3s, transform 0.2s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.new-game-btn:hover {
+  background-color: #45a049;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.new-game-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .leaderboard {
