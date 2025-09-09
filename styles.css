@@ -16,6 +16,18 @@ h1 {
   justify-content: center;
   margin: 0 auto;
   transition: all 0.3s ease;
+  animation: boardAppear 0.5s ease-out;
+}
+
+@keyframes boardAppear {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 .game-board.easy {
@@ -39,8 +51,21 @@ h1 {
   cursor: pointer;
   user-select: none;
   border-radius: 10px;
-  transition: transform 0.3s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   aspect-ratio: 1;
+  position: relative;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+.card:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 8px 25px rgba(33, 150, 243, 0.3);
+}
+
+.card:active {
+  transform: translateY(-1px) scale(0.98);
+  transition: all 0.1s ease;
 }
 
 .game-board.easy .card {
@@ -65,11 +90,90 @@ h1 {
   background-color: #ffffff;
   color: #000000;
   cursor: default;
+  transform: rotateY(180deg);
+  animation: cardFlip 0.6s ease-in-out;
+}
+
+.card.flipping {
+  animation: cardFlip 0.6s ease-in-out;
+}
+
+@keyframes cardFlip {
+  0% {
+    transform: rotateY(0deg);
+  }
+  50% {
+    transform: rotateY(90deg);
+  }
+  100% {
+    transform: rotateY(180deg);
+  }
 }
 
 .card.matched {
   background-color: #4caf50;
   color: #fff;
+  animation: matchSuccess 0.8s ease-in-out;
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(76, 175, 80, 0.6);
+}
+
+@keyframes matchSuccess {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 rgba(76, 175, 80, 0);
+  }
+  50% {
+    transform: scale(1.1);
+    box-shadow: 0 0 25px rgba(76, 175, 80, 0.8);
+  }
+  100% {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(76, 175, 80, 0.6);
+  }
+}
+
+.card.hint-highlight {
+  background-color: #ffeb3b;
+  color: #000;
+  animation: hint-pulse 2s ease-in-out infinite;
+  box-shadow: 0 0 25px rgba(255, 235, 59, 0.9);
+  transform: scale(1.05);
+}
+
+.card.hint-reveal {
+  animation: hint-reveal 1.5s ease-in-out;
+  transform: scale(1.02);
+}
+
+@keyframes hint-pulse {
+  0% { 
+    transform: scale(1.05);
+    box-shadow: 0 0 25px rgba(255, 235, 59, 0.9);
+  }
+  50% { 
+    transform: scale(1.1);
+    box-shadow: 0 0 35px rgba(255, 235, 59, 1);
+  }
+  100% { 
+    transform: scale(1.05);
+    box-shadow: 0 0 25px rgba(255, 235, 59, 0.9);
+  }
+}
+
+@keyframes hint-reveal {
+  0% { 
+    transform: scale(1);
+    box-shadow: 0 0 0 rgba(255, 235, 59, 0);
+  }
+  50% { 
+    transform: scale(1.08);
+    box-shadow: 0 0 20px rgba(255, 235, 59, 0.6);
+  }
+  100% { 
+    transform: scale(1.02);
+    box-shadow: 0 0 10px rgba(255, 235, 59, 0.3);
+  }
 }
 
 #game-info {
@@ -110,17 +214,27 @@ h1 {
   border-color: #1976d2;
 }
 
-.new-game-btn {
-  background-color: #4caf50;
-  color: white;
+.game-controls {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.new-game-btn, .hint-btn {
   border: none;
   padding: 12px 24px;
   font-size: 1.1rem;
   border-radius: 8px;
   cursor: pointer;
-  margin-bottom: 1rem;
   transition: background-color 0.3s, transform 0.2s;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.new-game-btn {
+  background-color: #4caf50;
+  color: white;
 }
 
 .new-game-btn:hover {
@@ -134,6 +248,36 @@ h1 {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
+.hint-btn {
+  background-color: #ff9800;
+  color: white;
+}
+
+.hint-btn:hover {
+  background-color: #f57c00;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.hint-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.hint-btn:disabled {
+  background-color: #ccc;
+  color: #666;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.hint-btn:disabled:hover {
+  background-color: #ccc;
+  transform: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
 /* Status message styles */
 #status-text {
   margin: 1rem 0;
@@ -141,6 +285,23 @@ h1 {
   border-radius: 6px;
   font-weight: bold;
   min-height: 1.5rem;
+  animation: statusSlideIn 0.3s ease-out;
+  transition: all 0.3s ease;
+}
+
+@keyframes statusSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+#status-text.status-animating {
+  animation: statusSlideIn 0.3s ease-out;
 }
 
 #status-text.info {
@@ -176,4 +337,36 @@ h1 {
   margin-bottom: 0.5rem;
   border-radius: 6px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  animation: leaderboardItemAppear 0.3s ease-out;
+}
+
+@keyframes leaderboardItemAppear {
+  0% {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Loading animation for cards */
+.card.loading {
+  animation: cardLoading 1s ease-in-out infinite;
+}
+
+@keyframes cardLoading {
+  0% {
+    opacity: 0.5;
+    transform: scale(0.9);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  100% {
+    opacity: 0.5;
+    transform: scale(0.9);
+  }
 }

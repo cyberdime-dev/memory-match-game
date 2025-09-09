@@ -29,8 +29,17 @@ function logError(message, error = null) {
 function showStatusMessage(message, type = 'info') {
     const statusText = document.getElementById("status-text");
     if (statusText) {
+        // Add animation class for new messages
+        statusText.classList.add('status-animating');
+        
+        // Update content and type
         statusText.textContent = message;
-        statusText.className = type;
+        statusText.className = `${type} status-animating`;
+        
+        // Remove animation class after animation completes
+        setTimeout(() => {
+            statusText.classList.remove('status-animating');
+        }, 300);
     }
 }
 
@@ -42,7 +51,7 @@ function validateDOMElement(element, elementName) {
 }
 
 // Initialize DOM elements with validation
-let gameBoard, statusText, timerEl, movesEl, leaderboardEl, newGameBtn, difficultySelect;
+let gameBoard, statusText, timerEl, movesEl, leaderboardEl, newGameBtn, difficultySelect, hintBtn;
 
 try {
     gameBoard = validateDOMElement(document.getElementById("game-board"), "game-board");
@@ -52,6 +61,7 @@ try {
     leaderboardEl = validateDOMElement(document.getElementById("leaderboard"), "leaderboard");
     newGameBtn = validateDOMElement(document.getElementById("new-game-btn"), "new-game-btn");
     difficultySelect = validateDOMElement(document.getElementById("difficulty"), "difficulty");
+    hintBtn = validateDOMElement(document.getElementById("hint-btn"), "hint-btn");
 } catch (error) {
     logError("Failed to initialize game elements", error);
     throw error;
@@ -70,6 +80,11 @@ let moves = 0;
 let time = 0;
 let timerInterval = null;
 let gameStarted = false;
+
+// Hint system variables
+let hintsUsed = 0;
+const MAX_HINTS = 3;
+let hintMode = 'highlight'; // 'highlight' or 'reveal'
 
 // Initialize cards based on current difficulty
 function initializeCards() {
@@ -189,7 +204,16 @@ function createGameBoard() {
         cards.forEach((emoji, index) => {
             const card = createCard(emoji);
             if (card) {
+                // Add loading animation with staggered delay
+                card.classList.add("loading");
+                card.style.animationDelay = `${index * 0.05}s`;
+                
                 gameBoard.appendChild(card);
+                
+                // Remove loading animation after a delay
+                setTimeout(() => {
+                    card.classList.remove("loading");
+                }, 500 + (index * 50));
             } else {
                 logError(`Failed to create card at index ${index}`);
             }
@@ -212,8 +236,15 @@ function flipCard(card) {
             throw new Error('Card missing emoji data');
         }
         
-        card.textContent = card.dataset.emoji;
-        card.classList.add("flipped");
+        // Add flipping animation class
+        card.classList.add("flipping");
+        
+        // Change content at the midpoint of the animation
+        setTimeout(() => {
+            card.textContent = card.dataset.emoji;
+            card.classList.add("flipped");
+            card.classList.remove("flipping");
+        }, 300); // Half of the 0.6s animation
     } catch (error) {
         logError("Failed to flip card", error);
     }
@@ -226,8 +257,15 @@ function unflipCard(card) {
             throw new Error('Invalid card element provided to unflipCard');
         }
         
-        card.textContent = "❓";
+        // Add flipping animation class
+        card.classList.add("flipping");
         card.classList.remove("flipped");
+        
+        // Change content at the midpoint of the animation
+        setTimeout(() => {
+            card.textContent = "❓";
+            card.classList.remove("flipping");
+        }, 300); // Half of the 0.6s animation
     } catch (error) {
         logError("Failed to unflip card", error);
     }
@@ -429,6 +467,9 @@ function resetGame() {
         time = 0;
         gameStarted = false;
         
+        // Reset hints
+        resetHints();
+        
         // Reset display
         try {
             if (timerEl) timerEl.textContent = time;
@@ -450,6 +491,130 @@ function resetGame() {
         createGameBoard();
     } catch (error) {
         logError("Failed to reset game", error);
+    }
+}
+
+// Hint system functions
+function getUnmatchedCards() {
+    try {
+        const allCards = gameBoard.querySelectorAll('.card');
+        const unmatchedCards = Array.from(allCards).filter(card => 
+            !card.classList.contains('matched') && !card.classList.contains('flipped')
+        );
+        return unmatchedCards;
+    } catch (error) {
+        logError("Failed to get unmatched cards", error);
+        return [];
+    }
+}
+
+function findMatchingPair() {
+    try {
+        const unmatchedCards = getUnmatchedCards();
+        const emojiMap = new Map();
+        
+        // Group cards by emoji
+        unmatchedCards.forEach(card => {
+            const emoji = card.dataset.emoji;
+            if (!emojiMap.has(emoji)) {
+                emojiMap.set(emoji, []);
+            }
+            emojiMap.get(emoji).push(card);
+        });
+        
+        // Find a pair
+        for (const [emoji, cards] of emojiMap) {
+            if (cards.length >= 2) {
+                return cards.slice(0, 2);
+            }
+        }
+        
+        return null;
+    } catch (error) {
+        logError("Failed to find matching pair", error);
+        return null;
+    }
+}
+
+function showHint() {
+    try {
+        if (hintsUsed >= MAX_HINTS) {
+            showStatusMessage("No more hints available!", 'error');
+            return;
+        }
+        
+        if (lockBoard) {
+            showStatusMessage("Please wait for current turn to finish", 'error');
+            return;
+        }
+        
+        const matchingPair = findMatchingPair();
+        if (!matchingPair) {
+            showStatusMessage("No matching pairs found!", 'info');
+            return;
+        }
+        
+        hintsUsed++;
+        updateHintButton();
+        
+        if (hintMode === 'highlight') {
+            // Highlight matching pair
+            matchingPair.forEach(card => {
+                card.classList.add('hint-highlight');
+            });
+            
+            setTimeout(() => {
+                matchingPair.forEach(card => {
+                    card.classList.remove('hint-highlight');
+                });
+            }, 2000);
+            
+            showStatusMessage(`💡 Hint ${hintsUsed}/${MAX_HINTS}: Matching pair highlighted!`, 'info');
+        } else {
+            // Reveal all cards briefly
+            const allCards = gameBoard.querySelectorAll('.card:not(.matched)');
+            allCards.forEach(card => {
+                card.classList.add('hint-reveal');
+                const originalText = card.textContent;
+                card.textContent = card.dataset.emoji;
+                
+                setTimeout(() => {
+                    if (!card.classList.contains('matched')) {
+                        card.textContent = originalText;
+                    }
+                    card.classList.remove('hint-reveal');
+                }, 1500);
+            });
+            
+            showStatusMessage(`💡 Hint ${hintsUsed}/${MAX_HINTS}: All cards revealed briefly!`, 'info');
+        }
+    } catch (error) {
+        logError("Failed to show hint", error);
+    }
+}
+
+function updateHintButton() {
+    try {
+        if (!hintBtn) return;
+        
+        if (hintsUsed >= MAX_HINTS) {
+            hintBtn.disabled = true;
+            hintBtn.textContent = `💡 Hint (${hintsUsed}/${MAX_HINTS})`;
+        } else {
+            hintBtn.disabled = false;
+            hintBtn.textContent = `💡 Hint (${hintsUsed}/${MAX_HINTS})`;
+        }
+    } catch (error) {
+        logError("Failed to update hint button", error);
+    }
+}
+
+function resetHints() {
+    try {
+        hintsUsed = 0;
+        updateHintButton();
+    } catch (error) {
+        logError("Failed to reset hints", error);
     }
 }
 
@@ -498,6 +663,18 @@ try {
     } else {
         logError("Difficulty select not found");
     }
+    
+    if (hintBtn) {
+        hintBtn.addEventListener("click", () => {
+            try {
+                showHint();
+            } catch (error) {
+                logError("Error in hint button click", error);
+            }
+        });
+    } else {
+        logError("Hint button not found");
+    }
 } catch (error) {
     logError("Failed to add event listeners", error);
 }
@@ -506,6 +683,9 @@ try {
 try {
     // Load leaderboard when the page loads
     loadLeaderboard();
+    
+    // Initialize hint button
+    updateHintButton();
 } catch (error) {
     logError("Failed to initialize game", error);
 }
