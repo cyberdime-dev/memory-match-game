@@ -1,9 +1,228 @@
+/* CSS Custom Properties for Theming */
+:root {
+  /* Light Theme (Default) */
+  --bg-primary: #f5f5f5;
+  --bg-secondary: #ffffff;
+  --text-primary: #333333;
+  --text-secondary: #666666;
+  --card-bg: #2196f3;
+  --card-text: #ffffff;
+  --card-flipped-bg: #ffffff;
+  --card-flipped-text: #000000;
+  --card-matched-bg: #4caf50;
+  --card-matched-text: #ffffff;
+  --card-hint-bg: #ffeb3b;
+  --card-hint-text: #000000;
+  --button-primary-bg: #4caf50;
+  --button-primary-text: #ffffff;
+  --button-secondary-bg: #ff9800;
+  --button-secondary-text: #ffffff;
+  --button-disabled-bg: #cccccc;
+  --button-disabled-text: #666666;
+  --select-bg: #ffffff;
+  --select-text: #333333;
+  --select-border: #2196f3;
+  --status-info-bg: #e3f2fd;
+  --status-info-text: #1976d2;
+  --status-success-bg: #e8f5e8;
+  --status-success-text: #2e7d32;
+  --status-error-bg: #ffebee;
+  --status-error-text: #c62828;
+  --leaderboard-bg: #ffffff;
+  --shadow-color: rgba(0, 0, 0, 0.2);
+  --shadow-hover: rgba(33, 150, 243, 0.3);
+  --shadow-match: rgba(76, 175, 80, 0.6);
+  --shadow-hint: rgba(255, 235, 59, 0.9);
+}
+
+/* Dark Theme */
+[data-theme="dark"] {
+  --bg-primary: #1a1a1a;
+  --bg-secondary: #2d2d2d;
+  --text-primary: #ffffff;
+  --text-secondary: #cccccc;
+  --card-bg: #3f51b5;
+  --card-text: #ffffff;
+  --card-flipped-bg: #424242;
+  --card-flipped-text: #ffffff;
+  --card-matched-bg: #4caf50;
+  --card-matched-text: #ffffff;
+  --card-hint-bg: #ffc107;
+  --card-hint-text: #000000;
+  --button-primary-bg: #4caf50;
+  --button-primary-text: #ffffff;
+  --button-secondary-bg: #ff9800;
+  --button-secondary-text: #ffffff;
+  --button-disabled-bg: #555555;
+  --button-disabled-text: #999999;
+  --select-bg: #424242;
+  --select-text: #ffffff;
+  --select-border: #3f51b5;
+  --status-info-bg: #1e3a8a;
+  --status-info-text: #93c5fd;
+  --status-success-bg: #14532d;
+  --status-success-text: #86efac;
+  --status-error-bg: #7f1d1d;
+  --status-error-text: #fca5a5;
+  --leaderboard-bg: #2d2d2d;
+  --shadow-color: rgba(0, 0, 0, 0.5);
+  --shadow-hover: rgba(63, 81, 181, 0.4);
+  --shadow-match: rgba(76, 175, 80, 0.7);
+  --shadow-hint: rgba(255, 193, 7, 0.9);
+}
+
+/* Colorful Theme */
+[data-theme="colorful"] {
+  --bg-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --bg-secondary: #ffffff;
+  --text-primary: #333333;
+  --text-secondary: #666666;
+  --card-bg: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+  --card-text: #ffffff;
+  --card-flipped-bg: #ffffff;
+  --card-flipped-text: #000000;
+  --card-matched-bg: linear-gradient(45deg, #4caf50, #8bc34a);
+  --card-matched-text: #ffffff;
+  --card-hint-bg: linear-gradient(45deg, #ffeb3b, #ff9800);
+  --card-hint-text: #000000;
+  --button-primary-bg: linear-gradient(45deg, #4caf50, #8bc34a);
+  --button-primary-text: #ffffff;
+  --button-secondary-bg: linear-gradient(45deg, #ff9800, #ff5722);
+  --button-secondary-text: #ffffff;
+  --button-disabled-bg: #cccccc;
+  --button-disabled-text: #666666;
+  --select-bg: #ffffff;
+  --select-text: #333333;
+  --select-border: #667eea;
+  --status-info-bg: #e3f2fd;
+  --status-info-text: #1976d2;
+  --status-success-bg: #e8f5e8;
+  --status-success-text: #2e7d32;
+  --status-error-bg: #ffebee;
+  --status-error-text: #c62828;
+  --leaderboard-bg: #ffffff;
+  --shadow-color: rgba(0, 0, 0, 0.2);
+  --shadow-hover: rgba(102, 126, 234, 0.4);
+  --shadow-match: rgba(76, 175, 80, 0.6);
+  --shadow-hint: rgba(255, 235, 59, 0.9);
+}
+
+/* Ocean Theme */
+[data-theme="ocean"] {
+  --bg-primary: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+  --bg-secondary: #ffffff;
+  --text-primary: #2d3436;
+  --text-secondary: #636e72;
+  --card-bg: #00b894;
+  --card-text: #ffffff;
+  --card-flipped-bg: #ffffff;
+  --card-flipped-text: #2d3436;
+  --card-matched-bg: #00cec9;
+  --card-matched-text: #ffffff;
+  --card-hint-bg: #fdcb6e;
+  --card-hint-text: #2d3436;
+  --button-primary-bg: #00b894;
+  --button-primary-text: #ffffff;
+  --button-secondary-bg: #e17055;
+  --button-secondary-text: #ffffff;
+  --button-disabled-bg: #b2bec3;
+  --button-disabled-text: #636e72;
+  --select-bg: #ffffff;
+  --select-text: #2d3436;
+  --select-border: #00b894;
+  --status-info-bg: #e3f2fd;
+  --status-info-text: #1976d2;
+  --status-success-bg: #e8f5e8;
+  --status-success-text: #2e7d32;
+  --status-error-bg: #ffebee;
+  --status-error-text: #c62828;
+  --leaderboard-bg: #ffffff;
+  --shadow-color: rgba(0, 0, 0, 0.2);
+  --shadow-hover: rgba(0, 184, 148, 0.4);
+  --shadow-match: rgba(0, 206, 201, 0.6);
+  --shadow-hint: rgba(253, 203, 110, 0.9);
+}
+
+/* Forest Theme */
+[data-theme="forest"] {
+  --bg-primary: linear-gradient(135deg, #00b894 0%, #00a085 100%);
+  --bg-secondary: #ffffff;
+  --text-primary: #2d3436;
+  --text-secondary: #636e72;
+  --card-bg: #6c5ce7;
+  --card-text: #ffffff;
+  --card-flipped-bg: #ffffff;
+  --card-flipped-text: #2d3436;
+  --card-matched-bg: #00b894;
+  --card-matched-text: #ffffff;
+  --card-hint-bg: #fdcb6e;
+  --card-hint-text: #2d3436;
+  --button-primary-bg: #00b894;
+  --button-primary-text: #ffffff;
+  --button-secondary-bg: #e17055;
+  --button-secondary-text: #ffffff;
+  --button-disabled-bg: #b2bec3;
+  --button-disabled-text: #636e72;
+  --select-bg: #ffffff;
+  --select-text: #2d3436;
+  --select-border: #6c5ce7;
+  --status-info-bg: #e3f2fd;
+  --status-info-text: #1976d2;
+  --status-success-bg: #e8f5e8;
+  --status-success-text: #2e7d32;
+  --status-error-bg: #ffebee;
+  --status-error-text: #c62828;
+  --leaderboard-bg: #ffffff;
+  --shadow-color: rgba(0, 0, 0, 0.2);
+  --shadow-hover: rgba(108, 92, 231, 0.4);
+  --shadow-match: rgba(0, 184, 148, 0.6);
+  --shadow-hint: rgba(253, 203, 110, 0.9);
+}
+
+/* Sunset Theme */
+[data-theme="sunset"] {
+  --bg-primary: linear-gradient(135deg, #ff7675 0%, #fd79a8 50%, #fdcb6e 100%);
+  --bg-secondary: #ffffff;
+  --text-primary: #2d3436;
+  --text-secondary: #636e72;
+  --card-bg: #e84393;
+  --card-text: #ffffff;
+  --card-flipped-bg: #ffffff;
+  --card-flipped-text: #2d3436;
+  --card-matched-bg: #00b894;
+  --card-matched-text: #ffffff;
+  --card-hint-bg: #fdcb6e;
+  --card-hint-text: #2d3436;
+  --button-primary-bg: #00b894;
+  --button-primary-text: #ffffff;
+  --button-secondary-bg: #e17055;
+  --button-secondary-text: #ffffff;
+  --button-disabled-bg: #b2bec3;
+  --button-disabled-text: #636e72;
+  --select-bg: #ffffff;
+  --select-text: #2d3436;
+  --select-border: #e84393;
+  --status-info-bg: #e3f2fd;
+  --status-info-text: #1976d2;
+  --status-success-bg: #e8f5e8;
+  --status-success-text: #2e7d32;
+  --status-error-bg: #ffebee;
+  --status-error-text: #c62828;
+  --leaderboard-bg: #ffffff;
+  --shadow-color: rgba(0, 0, 0, 0.2);
+  --shadow-hover: rgba(232, 67, 147, 0.4);
+  --shadow-match: rgba(0, 184, 148, 0.6);
+  --shadow-hint: rgba(253, 203, 110, 0.9);
+}
+
 body {
   font-family: Arial, sans-serif;
   text-align: center;
-  background-color: #f5f5f5;
+  background: var(--bg-primary);
+  color: var(--text-primary);
   margin: 0;
   padding: 2rem;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
 h1 {
@@ -43,8 +262,8 @@ h1 {
 }
 
 .card {
-  background-color: #2196f3;
-  color: white;
+  background: var(--card-bg);
+  color: var(--card-text);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -60,7 +279,7 @@ h1 {
 
 .card:hover {
   transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 8px 25px rgba(33, 150, 243, 0.3);
+  box-shadow: 0 8px 25px var(--shadow-hover);
 }
 
 .card:active {
@@ -87,8 +306,8 @@ h1 {
 }
 
 .card.flipped {
-  background-color: #ffffff;
-  color: #000000;
+  background: var(--card-flipped-bg);
+  color: var(--card-flipped-text);
   cursor: default;
   transform: rotateY(180deg);
   animation: cardFlip 0.6s ease-in-out;
@@ -111,33 +330,33 @@ h1 {
 }
 
 .card.matched {
-  background-color: #4caf50;
-  color: #fff;
+  background: var(--card-matched-bg);
+  color: var(--card-matched-text);
   animation: matchSuccess 0.8s ease-in-out;
   transform: scale(1.05);
-  box-shadow: 0 0 20px rgba(76, 175, 80, 0.6);
+  box-shadow: 0 0 20px var(--shadow-match);
 }
 
 @keyframes matchSuccess {
   0% {
     transform: scale(1);
-    box-shadow: 0 0 0 rgba(76, 175, 80, 0);
+    box-shadow: 0 0 0 var(--shadow-match);
   }
   50% {
     transform: scale(1.1);
-    box-shadow: 0 0 25px rgba(76, 175, 80, 0.8);
+    box-shadow: 0 0 25px var(--shadow-match);
   }
   100% {
     transform: scale(1.05);
-    box-shadow: 0 0 20px rgba(76, 175, 80, 0.6);
+    box-shadow: 0 0 20px var(--shadow-match);
   }
 }
 
 .card.hint-highlight {
-  background-color: #ffeb3b;
-  color: #000;
+  background: var(--card-hint-bg);
+  color: var(--card-hint-text);
   animation: hint-pulse 2s ease-in-out infinite;
-  box-shadow: 0 0 25px rgba(255, 235, 59, 0.9);
+  box-shadow: 0 0 25px var(--shadow-hint);
   transform: scale(1.05);
 }
 
@@ -149,30 +368,30 @@ h1 {
 @keyframes hint-pulse {
   0% { 
     transform: scale(1.05);
-    box-shadow: 0 0 25px rgba(255, 235, 59, 0.9);
+    box-shadow: 0 0 25px var(--shadow-hint);
   }
   50% { 
     transform: scale(1.1);
-    box-shadow: 0 0 35px rgba(255, 235, 59, 1);
+    box-shadow: 0 0 35px var(--shadow-hint);
   }
   100% { 
     transform: scale(1.05);
-    box-shadow: 0 0 25px rgba(255, 235, 59, 0.9);
+    box-shadow: 0 0 25px var(--shadow-hint);
   }
 }
 
 @keyframes hint-reveal {
   0% { 
     transform: scale(1);
-    box-shadow: 0 0 0 rgba(255, 235, 59, 0);
+    box-shadow: 0 0 0 var(--shadow-hint);
   }
   50% { 
     transform: scale(1.08);
-    box-shadow: 0 0 20px rgba(255, 235, 59, 0.6);
+    box-shadow: 0 0 20px var(--shadow-hint);
   }
   100% { 
     transform: scale(1.02);
-    box-shadow: 0 0 10px rgba(255, 235, 59, 0.3);
+    box-shadow: 0 0 10px var(--shadow-hint);
   }
 }
 
@@ -185,7 +404,7 @@ h1 {
   flex-wrap: wrap;
 }
 
-.difficulty-selector {
+.difficulty-selector, .theme-selector {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -194,24 +413,25 @@ h1 {
   font-size: 1.1rem;
 }
 
-.difficulty-select {
+.difficulty-select, .theme-select {
   padding: 8px 12px;
-  border: 2px solid #2196f3;
+  border: 2px solid var(--select-border);
   border-radius: 6px;
-  background-color: white;
+  background-color: var(--select-bg);
+  color: var(--select-text);
   font-size: 1rem;
   cursor: pointer;
   transition: border-color 0.3s, box-shadow 0.3s;
 }
 
-.difficulty-select:focus {
+.difficulty-select:focus, .theme-select:focus {
   outline: none;
-  border-color: #1976d2;
-  box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+  border-color: var(--select-border);
+  box-shadow: 0 0 0 3px var(--shadow-hover);
 }
 
-.difficulty-select:hover {
-  border-color: #1976d2;
+.difficulty-select:hover, .theme-select:hover {
+  border-color: var(--select-border);
 }
 
 .game-controls {
@@ -229,53 +449,53 @@ h1 {
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.2s;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 4px var(--shadow-color);
 }
 
 .new-game-btn {
-  background-color: #4caf50;
-  color: white;
+  background: var(--button-primary-bg);
+  color: var(--button-primary-text);
 }
 
 .new-game-btn:hover {
-  background-color: #45a049;
+  opacity: 0.9;
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 8px var(--shadow-color);
 }
 
 .new-game-btn:active {
   transform: translateY(0);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 4px var(--shadow-color);
 }
 
 .hint-btn {
-  background-color: #ff9800;
-  color: white;
+  background: var(--button-secondary-bg);
+  color: var(--button-secondary-text);
 }
 
 .hint-btn:hover {
-  background-color: #f57c00;
+  opacity: 0.9;
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 8px var(--shadow-color);
 }
 
 .hint-btn:active {
   transform: translateY(0);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 4px var(--shadow-color);
 }
 
 .hint-btn:disabled {
-  background-color: #ccc;
-  color: #666;
+  background: var(--button-disabled-bg);
+  color: var(--button-disabled-text);
   cursor: not-allowed;
   transform: none;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px var(--shadow-color);
 }
 
 .hint-btn:disabled:hover {
-  background-color: #ccc;
+  background: var(--button-disabled-bg);
   transform: none;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px var(--shadow-color);
 }
 
 /* Status message styles */
@@ -305,21 +525,21 @@ h1 {
 }
 
 #status-text.info {
-  background-color: #e3f2fd;
-  color: #1976d2;
-  border: 1px solid #bbdefb;
+  background-color: var(--status-info-bg);
+  color: var(--status-info-text);
+  border: 1px solid var(--status-info-text);
 }
 
 #status-text.success {
-  background-color: #e8f5e8;
-  color: #2e7d32;
-  border: 1px solid #c8e6c9;
+  background-color: var(--status-success-bg);
+  color: var(--status-success-text);
+  border: 1px solid var(--status-success-text);
 }
 
 #status-text.error {
-  background-color: #ffebee;
-  color: #c62828;
-  border: 1px solid #ffcdd2;
+  background-color: var(--status-error-bg);
+  color: var(--status-error-text);
+  border: 1px solid var(--status-error-text);
 }
 
 .leaderboard {
@@ -332,11 +552,12 @@ h1 {
 }
 
 .leaderboard li {
-  background: #ffffff;
+  background: var(--leaderboard-bg);
+  color: var(--text-primary);
   padding: 0.5rem 1rem;
   margin-bottom: 0.5rem;
   border-radius: 6px;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 5px var(--shadow-color);
   animation: leaderboardItemAppear 0.3s ease-out;
 }
 

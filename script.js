@@ -18,6 +18,7 @@ const DIFFICULTY_CONFIGS = {
 };
 
 const LEADERBOARD_KEY = "memoryMatchLeaderboard";
+const THEME_KEY = "memoryMatchTheme";
 const MAX_ENTRIES = 10;
 
 // Error handling utility functions
@@ -51,7 +52,7 @@ function validateDOMElement(element, elementName) {
 }
 
 // Initialize DOM elements with validation
-let gameBoard, statusText, timerEl, movesEl, leaderboardEl, newGameBtn, difficultySelect, hintBtn;
+let gameBoard, statusText, timerEl, movesEl, leaderboardEl, newGameBtn, difficultySelect, hintBtn, themeSelect;
 
 try {
     gameBoard = validateDOMElement(document.getElementById("game-board"), "game-board");
@@ -62,6 +63,7 @@ try {
     newGameBtn = validateDOMElement(document.getElementById("new-game-btn"), "new-game-btn");
     difficultySelect = validateDOMElement(document.getElementById("difficulty"), "difficulty");
     hintBtn = validateDOMElement(document.getElementById("hint-btn"), "hint-btn");
+    themeSelect = validateDOMElement(document.getElementById("theme"), "theme");
 } catch (error) {
     logError("Failed to initialize game elements", error);
     throw error;
@@ -69,6 +71,7 @@ try {
 
 // Initialize game state
 let currentDifficulty = 'medium';
+let currentTheme = 'light';
 let cards = [];
 let firstCard = null;
 let secondCard = null;
@@ -618,6 +621,99 @@ function resetHints() {
     }
 }
 
+// Theme management functions
+function loadTheme() {
+    try {
+        const savedTheme = localStorage.getItem(THEME_KEY);
+        if (savedTheme && ['light', 'dark', 'colorful', 'ocean', 'forest', 'sunset'].includes(savedTheme)) {
+            currentTheme = savedTheme;
+        } else {
+            currentTheme = 'light'; // Default theme
+        }
+        
+        // Apply the theme
+        applyTheme(currentTheme);
+        
+        // Update the theme selector
+        if (themeSelect) {
+            themeSelect.value = currentTheme;
+        }
+    } catch (error) {
+        logError("Failed to load theme", error);
+        currentTheme = 'light';
+        applyTheme(currentTheme);
+    }
+}
+
+function saveTheme(theme) {
+    try {
+        localStorage.setItem(THEME_KEY, theme);
+    } catch (error) {
+        logError("Failed to save theme", error);
+    }
+}
+
+function applyTheme(theme) {
+    try {
+        if (!document.documentElement) {
+            throw new Error('Document element not available');
+        }
+        
+        // Remove existing theme classes
+        document.documentElement.removeAttribute('data-theme');
+        
+        // Apply new theme
+        if (theme !== 'light') {
+            document.documentElement.setAttribute('data-theme', theme);
+        }
+        
+        currentTheme = theme;
+        
+        // Add smooth transition effect
+        document.body.style.transition = 'background 0.3s ease, color 0.3s ease';
+        
+        // Remove transition after animation completes
+        setTimeout(() => {
+            document.body.style.transition = '';
+        }, 300);
+        
+    } catch (error) {
+        logError("Failed to apply theme", error);
+    }
+}
+
+function handleThemeChange() {
+    try {
+        if (!themeSelect) {
+            throw new Error('Theme select element not available');
+        }
+        
+        const newTheme = themeSelect.value;
+        if (!['light', 'dark', 'colorful', 'ocean', 'forest', 'sunset'].includes(newTheme)) {
+            throw new Error(`Invalid theme: ${newTheme}`);
+        }
+        
+        // Only change theme if it's different from current
+        if (newTheme !== currentTheme) {
+            applyTheme(newTheme);
+            saveTheme(newTheme);
+            
+            const themeNames = {
+                light: 'Light',
+                dark: 'Dark',
+                colorful: 'Colorful',
+                ocean: 'Ocean',
+                forest: 'Forest',
+                sunset: 'Sunset'
+            };
+            
+            showStatusMessage(`🎨 Switched to ${themeNames[newTheme]} theme`, 'info');
+        }
+    } catch (error) {
+        logError("Failed to change theme", error);
+    }
+}
+
 // Handle difficulty change
 function handleDifficultyChange() {
     try {
@@ -675,12 +771,21 @@ try {
     } else {
         logError("Hint button not found");
     }
+    
+    if (themeSelect) {
+        themeSelect.addEventListener("change", handleThemeChange);
+    } else {
+        logError("Theme select not found");
+    }
 } catch (error) {
     logError("Failed to add event listeners", error);
 }
 
 // Initialize the game with error handling
 try {
+    // Load theme when the page loads
+    loadTheme();
+    
     // Load leaderboard when the page loads
     loadLeaderboard();
     

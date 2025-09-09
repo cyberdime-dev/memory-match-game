@@ -2,9 +2,7 @@
 
 > **A showcase of modern web development skills and clean code practices**
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-View%20Project-brightgreen?style=for-the-badge&logo=github)](https://cyberdime-dev.github.io/memory-match-game)
-[![Portfolio](https://img.shields.io/badge/Portfolio-John%20Norris-blue?style=for-the-badge)](https://cyberdime-dev.github.io)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?style=for-the-badge&logo=linkedin)](https://www.linkedin.com/in/cyberdime-dev)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-View%20Project-brightgreen?style=for-the-badge&logo=github)](https://cyberdime-dev.github.io/memory-match)
 
 ## 🎯 **Project Overview**
 
@@ -66,7 +64,7 @@ This memory matching game demonstrates **production-ready web development skills
 
 ### **Project Structure**
 ```
-memory-match-game/
+memory-match/
 ├── index.html          # Semantic HTML5 structure
 ├── script.js           # Modular JavaScript architecture
 ├── styles.css          # Responsive CSS with modern layouts
@@ -92,13 +90,13 @@ memory-match-game/
 ## 🚀 **Quick Start**
 
 ### **Live Demo**
-[**View Live Project**](https://cyberdime-dev.github.io/memory-match-game) - See the game in action
+[**View Live Project**](https://cyberdime-dev.github.io/memory-match) - See the game in action
 
 ### **Local Development**
 ```bash
 # Clone the repository
-git clone https://github.com/cyberdime-dev/memory-match-game.git
-cd memory-match-game
+git clone https://github.com/cyberdime-dev/memory-match.git
+cd memory-match
 
 # Open in browser (no build process required)
 open index.html
@@ -168,7 +166,7 @@ const DIFFICULTY_CONFIGS = {
 
 ---
 
-## 🤝 **Contributing & Collaboration**
+## 🤝 **Teamwork**
 
 ### **Development Workflow**
 1. **Fork & Clone**: Standard Git workflow
@@ -226,8 +224,7 @@ const DIFFICULTY_CONFIGS = {
 ## 📞 **Contact & Portfolio**
 
 **John Norris** - Full-Stack Developer  
-🌐 **Portfolio**: [cyberdime-dev.github.io](https://cyberdime-dev.github.io)  
-💼 **LinkedIn**: [linkedin.com/in/cyberdime-dev](https://www.linkedin.com/in/cyberdime-dev)  
+💼 **LinkedIn**: [linkedin.com/in/cyberdime-dev](https://www.linkedin.com/in/john-norris-812486281/)  
 📧 **Email**: info@cyberdime.com  
 
 ### **Available for:**
