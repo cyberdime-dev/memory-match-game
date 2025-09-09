@@ -1,32 +1,291 @@
-# Node.js dependencies
+# ===========================================
+# Memory Match Game - .gitignore
+# ===========================================
+
+# ===========================================
+# Dependencies & Package Managers
+# ===========================================
+
+# Node.js
 node_modules/
 npm-debug.log*
+npm-debug.log
 yarn-debug.log*
 yarn-error.log*
+yarn.lock
+package-lock.json
+.npm
+.yarn-integrity
 
-# Build output
+# Bower
+bower_components/
+.bower-cache/
+.bower-registry/
+.bower-tmp/
+
+# ===========================================
+# Build Output & Distribution
+# ===========================================
+
+# Build directories
 dist/
 build/
 out/
+target/
+.next/
+.nuxt/
+.vuepress/dist/
+
+# Compiled files
+*.min.js
+*.min.css
+*.bundle.js
+*.chunk.js
+
+# ===========================================
+# Environment & Configuration
+# ===========================================
 
 # Environment variables
 .env
 .env.local
+.env.development.local
+.env.test.local
+.env.production.local
 .env.*.local
 
-# OS files
+# Configuration files with sensitive data
+config.local.js
+config.local.json
+secrets.json
+.secrets
+
+# ===========================================
+# Operating System Files
+# ===========================================
+
+# macOS
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
 
-# IDE files
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# ===========================================
+# IDE & Editor Files
+# ===========================================
+
+# Visual Studio Code
 .vscode/
-.idea/
-*.sublime-workspace
-*.sublime-project
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
 *.code-workspace
 
-# Misc
+# IntelliJ IDEA / WebStorm
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Sublime Text
+*.sublime-workspace
+*.sublime-project
+
+# Vim
+*.swp
+*.swo
+*~
+.netrwhist
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# Atom
+.ftpconfig
+.sftpconfig
+
+# ===========================================
+# Logs & Debugging
+# ===========================================
+
+# Log files
 *.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
 coverage/
+*.lcov
+.nyc_output/
+
+# ===========================================
+# Testing & Quality Assurance
+# ===========================================
+
+# Test coverage
+coverage/
+.nyc_output/
+.coverage/
+htmlcov/
+
+# Jest
+.jest/
+
+# Cypress
+cypress/videos/
+cypress/screenshots/
+
+# ===========================================
+# Caching & Temporary Files
+# ===========================================
+
+# Cache directories
 .cache/
+.parcel-cache/
+.eslintcache
+.stylelintcache
+.sass-cache/
+.webpack/
+
+# Temporary files
+tmp/
+temp/
+.tmp/
+.temp/
+
+# ===========================================
+# Web Development Specific
+# ===========================================
+
+# Sass
+.sass-cache/
+*.css.map
+*.sass.map
+*.scss.map
+
+# TypeScript
+*.tsbuildinfo
+
+# Webpack
+.webpack/
+
+# Rollup
+.rollup.cache/
+
+# ===========================================
+# Security & Sensitive Files
+# ===========================================
+
+# API keys and secrets
+.env
+.env.*
+secrets/
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# ===========================================
+# Documentation & Development
+# ===========================================
+
+# Development notes and todos
 todo.md
+notes.md
+dev-notes.md
+*.todo
+*.note
+
+# Backup files
+*.bak
+*.backup
+*.old
+*.orig
+
+# ===========================================
+# Miscellaneous
+# ===========================================
+
+# Archives
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# Media files (if not needed in repo)
+*.mp4
+*.avi
+*.mov
+*.wmv
+*.flv
+*.webm
+*.mp3
+*.wav
+*.flac
+*.aac
+
+# Large files
+*.psd
+*.ai
+*.sketch
+*.fig
+
+# ===========================================
+# Project Specific
+# ===========================================
+
+# Memory Match Game specific files
+# (Add any project-specific files here)
+
+# ===========================================
+# End of .gitignore
+# ===========================================
